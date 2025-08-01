@@ -83,16 +83,21 @@
 
   <script>
     let currentMove = "UP";
+    let currentAction = "NONE";
 
     function sendCommand(move, action) {
       if (["UP", "DOWN", "RIGHT", "LEFT", "STAY"].includes(move)) {
         currentMove = move;
       }
 
+      if (["ATTACK", "COLLECT", "BOMB", "NONE"].includes(action)) {
+        currentAction = action;
+      }
+
       fetch('/control', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ move: currentMove, action })
+        body: JSON.stringify({ move: currentMove, action: currentAction })
       });
     }
 
