@@ -1,56 +1,111 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>BotWar Controller</title>
-    <style>
-        button {
-            font-size: 20px;
-            margin: 5px;
-            padding: 10px 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>BotWar - Manette</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f172a;
+      color: #f1f5f9;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 0.2em;
+    }
+
+    #currentCommand {
+      font-size: 1.5em;
+      margin-bottom: 30px;
+      color: #38bdf8;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 120px);
+      grid-gap: 15px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-size: 1em;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #1e293b;
+      color: #f1f5f9;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #334155;
+    }
+
+    button:active {
+      background-color: #475569;
+    }
+  </style>
 </head>
 <body>
-    <h1>BotWar Controller</h1>
-    <h2 id="currentCommand">Commande actuelle : move=UP, action=NONE</h2>
-    <div>
-        <button onclick="sendCommand('UP','NONE')">HAUT</button>
-        <button onclick="sendCommand('DOWN','NONE')">BAS</button>
-        <button onclick="sendCommand('LEFT','NONE')">GAUCHE</button>
-        <button onclick="sendCommand('RIGHT','NONE')">DROITE</button>
-        <button onclick="sendCommand('STAY','NONE')">PAS BOUGER</button>
-    </div>
-    <div>
-        <button onclick="sendCommand(currentMove,'COLLECT')">COLLECTER</button>
-        <button onclick="sendCommand(currentMove,'BOMB')">POSER BOMBE</button>
-        <button onclick="sendCommand(currentMove,'NONE')">NE RIEN FAIRE</button>
-    </div>
+  <h1>Botox BotWar Controller</h1>
+  <div id="currentCommand">Commande actuelle : move=UP, action=NONE</div>
 
-    <script>
-        let currentMove = "STAY";
+  <div class="grid">
+    <div></div>
+    <button onclick="sendCommand('UP', 'NONE')">↑</button>
+    <div></div>
+    <button onclick="sendCommand('LEFT', 'NONE')">←</button>
+    <button onclick="sendCommand('STAY', 'NONE')">⏹</button>
+    <button onclick="sendCommand('RIGHT', 'NONE')">→</button>
+    <div></div>
+    <button onclick="sendCommand('DOWN', 'NONE')">↓</button>
+    <div></div>
+  </div> 
 
-        function sendCommand(move, action) {
-            if(["UP", "DOWN", "RIGHT", "LEFT", "STAY"].includes(move)) currentMove = move;
-            console.log(currentMove, action);
+  <div class="action-buttons">
+    <button onclick="sendCommand(currentMove, 'COLLECT')">Collecter</button>
+    <button onclick="sendCommand(currentMove, 'BOMB')">Poser Bombe</button>
+    <button onclick="sendCommand(currentMove, 'NONE')">Ne Rien Faire</button>
+  </div>
 
-            fetch('/control', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ move: currentMove, action, action })
-            });
-        }
+  <script>
+    let currentMove = "STAY";
 
-        function updateDisplay() {
-            fetch('/action')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('currentCommand').textContent = `Commande actuelle : move=${data.move}, action=${data.action}`;
-                });
-        }
+    function sendCommand(move, action) {
+      if (["UP", "DOWN", "RIGHT", "LEFT", "STAY"].includes(move)) {
+        currentMove = move;
+      }
 
-        setInterval(updateDisplay, 500);
-        updateDisplay();
-    </script>
+      fetch('/control', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ move: currentMove, action })
+      });
+    }
+
+    function updateDisplay() {
+      fetch('/action')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('currentCommand').textContent =
+            `Commande actuelle : move=${data.move}, action=${data.action}`;
+        })
+    }
+
+    setInterval(updateDisplay, 500);
+    updateDisplay();
+  </script>
 </body>
 </html>
