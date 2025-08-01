@@ -1,0 +1,24 @@
+{
+  "name": "ipssi-newbotwar",
+  "version": "1.0.0",
+  "description": "A new version of botwar project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thekorzeremi/IPSSI-NewBotWar.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Thekorzeremi/IPSSI-NewBotWar/issues"
+  },
+  "homepage": "https://github.com/Thekorzeremi/IPSSI-NewBotWar#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
