@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.disable('etag');
@@ -14,12 +14,45 @@ app.post('/control', (req,res) => {
     res.send({ success: true });
 });
 
-app.get('/action', (req,res) => {
-    const raw = fs.readFileSync('lastCommand.json');
-    const command = JSON.parse(raw);
-    res.json(command);
+app.get('/action', (req, res) => {
+    let command;
+    try {
+        if (!fs.existsSync('lastCommand.json')) {
+            command = { move: "UP", action: "NONE" };
+            fs.writeFileSync('lastCommand.json', JSON.stringify(command));
+            return res.json(command);
+        }
+
+        const raw = fs.readFileSync('lastCommand.json', 'utf-8');
+        if (!raw) {
+            command = { move: "UP", action: "NONE" };
+            fs.writeFileSync('lastCommand.json', JSON.stringify(command));
+            return res.json(command);
+        }
+
+        command = JSON.parse(raw);
+
+        if (!command.move || !command.action) {
+            command = { move: "UP", action: "NONE" };
+            fs.writeFileSync('lastCommand.json', JSON.stringify(command));
+            return res.json(command);
+        }
+
+        res.json(command);
+
+    } catch (e) {
+        command = { move: "UP", action: "NONE" };
+        fs.writeFileSync('lastCommand.json', JSON.stringify(command));
+        res.json(command);
+    }
 });
 
-app.listen(PORT, () => {
-    console.log(`Le bot est lancé sur http://127.0.0.1:${PORT}`);
-});
+
+if (require.main === module) {
+    fs.writeFileSync('lastCommand.json', JSON.stringify({ move: "UP", action: "NONE" }));
+    app.listen(PORT, () => {
+        console.log(`Le bot est lancé sur http://127.0.0.1:${PORT}`);
+    });
+}
+
+module.exports = app;
