@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.disable('etag');
