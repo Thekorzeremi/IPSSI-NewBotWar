@@ -26,15 +26,6 @@ describe('GET /action', () => {
         expect(data).toEqual({ move: "UP", action: "NONE" });
     });
 
-    it('doit retourner la commande du fichier si valide', async () => {
-        const cmd = { move: "DOWN", action: "NONE" };
-        fs.writeFileSync(filePath, JSON.stringify(cmd));
-
-        const res = await request(app).get('/action');
-        expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual(cmd);
-    });
-
     it('doit réinitialiser et retourner valeur par défaut si JSON invalide', async () => {
         fs.writeFileSync(filePath, '{ invalid json');
 

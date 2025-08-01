@@ -19,7 +19,7 @@ jobs:
         node-version: 18
 
     - name: Installation des dépendances
-      run: npm ci
+      run: npm i
 
     - name: Exécution des tests
       run: npm test
